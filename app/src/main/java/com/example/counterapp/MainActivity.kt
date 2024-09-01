@@ -15,6 +15,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.counterapp.ui.CounterViewModel
 import com.example.counterapp.ui.theme.CounterAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,8 +48,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CounterApp(modifier: Modifier = Modifier) {
-    var counter by rememberSaveable { mutableIntStateOf(0) }
+fun CounterApp(modifier: Modifier = Modifier , viewModel: CounterViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+   // var counter by rememberSaveable { mutableIntStateOf(0) }
+    // read date
+   val counter by viewModel.uiState.collectAsState()
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +71,9 @@ fun CounterApp(modifier: Modifier = Modifier) {
             )
 
         )
-        Button(onClick = { ++counter },
+        Button(onClick = {
+            viewModel.increment()
+        },
             colors = ButtonDefaults.buttonColors(
                containerColor = Color.Blue
             ),
@@ -86,7 +93,7 @@ fun CounterApp(modifier: Modifier = Modifier) {
 
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 private fun CounterAppPreview() {
     CounterApp()
